@@ -234,6 +234,7 @@ class ShowGenerator:
                 "type": event_type,
                 "platform": song.platform,
                 "source_id": song.source_id,
+                "url": song.playback_url,
                 "expected_duration": int(song.duration.total_seconds()),
             },
         )

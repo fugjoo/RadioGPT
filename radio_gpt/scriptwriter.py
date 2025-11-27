@@ -36,14 +36,16 @@ class ScriptWriter:
             f"{song.title} von {song.artist} passt großartig in die Stimmung — viel Spaß!",
             f"Noch ein Highlight in unserer Rotation: {song.artist} und '{song.title}'.",
         ]
+        vibe = self._describe_vibe(song)
+        platform = self._platform_hint(song)
         fact = self.random.choice(
             [
-                "Die Band hat die Nummer live in einer einzigen Nacht aufgenommen.",
                 "Der Track trendet gerade auf mehreren Indie-Playlists.",
                 "Das Stück wurde komplett analog produziert.",
+                "Viele von euch feiern den Sound bereits im Netz.",
             ]
         )
-        return f"{self.random.choice(hooks)} {fact}"
+        return " ".join(filter(None, [self.random.choice(hooks), vibe, fact, platform]))
 
     def build_song_backannounce(self, song: Song) -> str:
         closer = self.random.choice(
@@ -53,7 +55,8 @@ class ScriptWriter:
                 "So klingt der Soundtrack zu eurem Wochenende.",
             ]
         )
-        return f"{song.artist} mit '{song.title}'. {closer}"
+        platform = self._platform_hint(song)
+        return " ".join(filter(None, [f"{song.artist} mit '{song.title}'.", closer, platform]))
 
     def build_news_bulletin(self, news: Iterable[NewsItem]) -> str:
         lines: List[str] = ["Kurz und knackig — hier sind die aktuellen Themen:"]
@@ -78,3 +81,20 @@ class ScriptWriter:
             ]
         )
         return f"{thanks} {cta}"
+
+    def _describe_vibe(self, song: Song) -> str:
+        if not song.tags:
+            return ""
+        samples = self.random.sample(song.tags, k=min(2, len(song.tags)))
+        if len(samples) == 1:
+            return f"Klingt nach {samples[0]}-Vibes."
+        return f"Mix aus {samples[0]} und {samples[1]} — passt perfekt."
+
+    def _platform_hint(self, song: Song) -> str:
+        if not song.source_id:
+            return ""
+        if song.platform.upper() == "YOUTUBE":
+            return f"Falls ihr den Clip sehen wollt: {song.playback_url}."
+        if song.platform.upper() == "SOUNDCLOUD":
+            return f"Gibt's auch bei SoundCloud: {song.playback_url}."
+        return ""
