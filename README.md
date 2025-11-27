@@ -16,6 +16,11 @@ python -m radio_gpt --duration 45 --host "Mia"
 
 # JSON-Ausgabe für 60 Minuten mit festem Seed
 python -m radio_gpt --json --seed 7
+
+# Timeline-Ausgabe für einen synchronisierten Webplayer
+python -m radio_gpt --timeline --duration 30
 ```
 
 Die Zeitleiste enthält Startzeitpunkte, Laufzeiten und Beschreibungen für jeden Show-Bestandteil.
+
+Im Timeline-Modus liefert RadioGPT zusätzlich Payloads für eingebettete Player (YouTube/SoundCloud) und TTS-Clips (z. B. `asset_url`/`url`, Plattformen und erwartete Dauer). So kann ein Webclient die Elemente anhand des aktuellen Zeitstempels starten.
